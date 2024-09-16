@@ -35,7 +35,6 @@ body {
 .section {
   padding: 15rem 3rem;
   border-top: 1px solid #ddd;
-
   transition: transform 1s, opacity 1s;
 }
 
@@ -94,11 +93,17 @@ body {
   transition: all 0.3s;
 }
 
+.logo {
+  margin-left: -250px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
 p {
   color: #666;
 }
 
-/* This is BAD for accessibility! Don't do in the real world! */
 button:focus {
   outline: none;
 }
@@ -118,29 +123,36 @@ img {
   align-items: center;
   height: 9rem;
   width: 100%;
-  padding: 0 6rem;
+  padding: 0 2rem;
   z-index: 100;
+  position: fixed;
+  background-color: bisque;
 }
 
 /* nav and stickly class at the same time */
-.nav.sticky {
+/* .nav.sticky {
   position: fixed;
   background-color: rgba(255, 255, 255, 0.95);
-}
+} */
 
 .nav__logo {
   height: 4.5rem;
   transition: all 0.3s;
+  mix-blend-mode: multiply;
+  margin-left: 60px;
+  border-radius: 50%;
 }
 
 .nav__links {
   display: flex;
   align-items: center;
   list-style: none;
+  font-size: 12px;
+  font-family: 'Garamond', sans-serif;
 }
 
 .nav__item {
-  margin-left: 4rem;
+  margin-left: 6rem;
 }
 
 .nav__link:link,
@@ -151,6 +163,11 @@ img {
   text-decoration: none;
   display: block;
   transition: all 0.3s;
+}
+.nav__link:active,
+.nav__link:hover {
+  text-decoration: underline;
+  color: #007bff;
 }
 
 .nav__link--btn:link,
@@ -165,7 +182,8 @@ img {
 .nav__link--btn:active {
   color: inherit;
   background-color: var(--color-primary-darker);
-  color: #333;
+  color: #020705;
+  text-decoration: none;
 }
 
 /* HEADER */
@@ -179,30 +197,33 @@ img {
 
 .header__title {
   flex: 1;
-
+  margin: 15%;
+  /* margin: 0 20rem; */
   max-width: 115rem;
   display: grid;
   grid-template-columns: 3fr 2fr;
   row-gap: 3rem;
   align-content: center;
   justify-content: center;
-
+  column-gap: 5rem;
   align-items: start;
   justify-items: start;
 }
 
 h1 {
-  font-size: 5.5rem;
+  font-size: 3.5rem;
   line-height: 1.35;
 }
 
 h4 {
   font-size: 2.4rem;
-  font-weight: 500;
+  font-weight: 800;
 }
 
 .header__img {
+  margin-top: 20%;
   width: 100%;
+  /* height: 100%; */
   grid-column: 2 / 3;
   grid-row: 1 / span 4;
   transform: translateY(-6rem);
