@@ -26,7 +26,7 @@ body {
   font-size: 1.9rem;
   font-weight: bold;
   padding: 2rem;
-  margin-bottom: -10rem;
+  margin-bottom: -5rem;
   /* position: fixed; */
 }
 
@@ -83,10 +83,10 @@ body {
 .app {
   position: relative;
   max-width: 100rem;
-  margin: 4rem auto;
+  margin: 2rem auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
   gap: 4rem;
 
   /* opacity: 0;
@@ -95,32 +95,35 @@ body {
 
 /* BALANCE */
 .balance {
-  grid-column: 1 / 3;
+  grid-column: 1 / span 2;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   margin-bottom: 2rem;
+  /* height: 200px; */
+  /* width: 1000px; */
 }
 
 .balance_label {
   font-size: 2.2rem;
   font-weight: 500;
-  margin-bottom: -0.2rem;
+  margin-bottom: 0.5rem;
 }
 
 .balance_date {
-  font-size: 1.4rem;
+  font-size: 1rem;
   color: #888;
 }
 
 .balance_value {
-  font-size: 4.5rem;
+  font-size: 4rem;
   font-weight: 400;
 }
 
 /* MOVEMENTS */
 .movements {
-  grid-row: 2 / 3;
+  grid-row: 2 / span 3;
+  /* height: 75%; */
   background-color: #fff;
   border-radius: 1rem;
   overflow: scroll;
@@ -164,9 +167,10 @@ body {
 
 /* SUMMARY */
 .summary {
-  grid-row: 3 / 4;
+  grid-column: 1;
+  /* grid-row: 4 / 4; */
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   padding: 0 0.3rem;
   margin-top: 1rem;
 }
@@ -179,7 +183,8 @@ body {
 }
 
 .summary_value {
-  font-size: 2.2rem;
+  font-size: 2rem;
+  white-space: nowrap;
   margin-right: 2.5rem;
 }
 
@@ -203,7 +208,8 @@ body {
 
 /* OPERATIONS */
 .operation {
-  grid-column: 2 / 3;
+  grid-column: 2;
+  grid-row: 2;
   border-radius: 1rem;
   padding: 3rem 4rem;
   color: #333;

@@ -126,7 +126,7 @@ img {
   padding: 0 2rem;
   z-index: 100;
   position: fixed;
-  background-color: bisque;
+  background-color: #fffffd;
 }
 
 /* nav and stickly class at the same time */
@@ -222,8 +222,8 @@ h4 {
 
 .header__img {
   margin-top: 20%;
-  width: 100%;
-  /* height: 100%; */
+  width: 120%;
+  height: 100%;
   grid-column: 2 / 3;
   grid-row: 1 / span 4;
   transform: translateY(-6rem);
