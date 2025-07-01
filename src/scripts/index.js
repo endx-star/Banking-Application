@@ -6,7 +6,9 @@ const [account1, account2, account3, account4, account5] = accounts;
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const modalLogin = document.querySelector('.modal--login');
+const modalSignup = document.querySelector('.modal--signup');
 const overlayLogin = document.querySelector('.overlay--login');
+const overlaySignup = document.querySelector('.overlay--signup');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnOpenModal = document.querySelector('.btn--show-modal-login');
@@ -16,6 +18,7 @@ const nav = document.querySelector('.nav');
 const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
+const btnsOpenSignupModal = document.querySelectorAll('.btn--show-modal-signup');
 
 ///// WINDOW MODAL ///////
 const openModal = function (e) {
@@ -34,16 +37,88 @@ const loginModal = function (e) {
   modalLogin.classList.remove('hidden');
   overlayLogin.classList.remove('hidden');
 };
-btnsOpenModal.forEach(btn => btn.addEventListener('click', openModal));
 
+const signupModal = function (e) {
+  e.preventDefault();
+  modalSignup.classList.remove('hidden');
+  overlaySignup.classList.remove('hidden');
+};
+
+const closeLoginModal = function () {
+  modalLogin.classList.add('hidden');
+  overlayLogin.classList.add('hidden');
+};
+
+const closeSignupModal = function () {
+  modalSignup.classList.add('hidden');
+  overlaySignup.classList.add('hidden');
+};
+
+btnsOpenModal.forEach(btn => btn.addEventListener('click', openModal));
 btnCloseModal.addEventListener('click', closeModal);
 overlay.addEventListener('click', closeModal);
 btnOpenModal.addEventListener('click', loginModal);
 
+// Close login modal
+document.querySelector('.modal--login .btn--close-modal').addEventListener('click', closeLoginModal);
+document.querySelector('.overlay--login').addEventListener('click', closeLoginModal);
+
+// Close signup modal
+document.querySelector('.modal--signup .btn--close-modal').addEventListener('click', closeSignupModal);
+overlaySignup.addEventListener('click', closeSignupModal);
+
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-    closeModal();
+  if (e.key === 'Escape') {
+    if (!modal.classList.contains('hidden')) {
+      closeModal();
+    }
+    if (!modalLogin.classList.contains('hidden')) {
+      closeLoginModal();
+    }
+    if (!modalSignup.classList.contains('hidden')) {
+      closeSignupModal();
+    }
   }
+});
+
+// Helper: get all accounts (from localStorage if present)
+function getAllAccounts() {
+  const stored = localStorage.getItem('accounts');
+  if (stored) return JSON.parse(stored);
+  return accounts;
+}
+
+// Helper: save all accounts to localStorage
+function saveAllAccounts(accs) {
+  localStorage.setItem('accounts', JSON.stringify(accs));
+}
+
+// Login functionality
+const loginForm = document.querySelector('.modal--login .modal__form');
+const loginErrorDiv = loginForm.querySelector('.login-error-message');
+loginForm.querySelector('.modal__form--login').addEventListener('click', function (e) {
+  e.preventDefault();
+  const email = loginForm.querySelector('.modal__form--email').value;
+  const pin = Number(loginForm.querySelector('.modal__form--pin').value);
+
+  // Use getAllAccounts to include new signups if persisted
+  const allAccounts = getAllAccounts();
+  const account = allAccounts.find(acc => acc.email === email);
+
+  if (account?.pin === pin) {
+    localStorage.setItem('currentAccount', JSON.stringify(account));
+    localStorage.setItem('isNewUser', 'false');
+    loginErrorDiv.textContent = '';
+    closeLoginModal();
+    window.location.href = 'home.html';
+  } else {
+    loginErrorDiv.textContent = 'Incorrect email or PIN!';
+  }
+});
+
+// Clear error message when opening the login modal
+btnOpenModal.addEventListener('click', function() {
+  if (loginErrorDiv) loginErrorDiv.textContent = '';
 });
 
 ////// BUTTON SCROLLING //////
@@ -51,11 +126,8 @@ document.addEventListener('keydown', function (e) {
 btnScrollTo.addEventListener('click', function (e) {
   const s1coords = section1.getBoundingClientRect();
   console.log(s1coords);
-
   console.log(e.target.getBoundingClientRect());
-
   console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
-
   console.log(
     'height/width viewport',
     document.documentElement.clientHeight,
@@ -77,20 +149,7 @@ btnScrollTo.addEventListener('click', function (e) {
   section1.scrollIntoView({ behavior: 'smooth' });
 });
 
-///////////////////////////////////////
-// Page navigation
 
-// document.querySelectorAll('.nav__link').forEach(function (el) {
-//   el.addEventListener('click', function (e) {
-//     e.preventDefault();
-//     const id = this.getAttribute('href');
-//     console.log(id);
-//     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
-//   });
-// });
-
-// 1. Add event listener to common parent element
-// 2. Determine what element originated the event
 
 document.querySelector('.nav__links').addEventListener('click', function (e) {
   e.preventDefault();
@@ -302,3 +361,70 @@ const slider = function () {
   });
 };
 slider();
+
+btnsOpenSignupModal.forEach(btn => btn.addEventListener('click', signupModal));
+
+// Signup functionality
+modalSignup.querySelector('.modal__form--signup').addEventListener('click', function (e) {
+  e.preventDefault();
+  const form = modalSignup.querySelector('form');
+  const inputs = form.querySelectorAll('input');
+  const [firstNameInput, lastNameInput, emailInput, pinInput, confirmPinInput] = inputs;
+  const errorDiv = form.querySelector('.signup-error-message');
+  const firstName = firstNameInput.value.trim();
+  const lastName = lastNameInput.value.trim();
+  const email = emailInput.value.trim();
+  const pin = pinInput.value.trim();
+  const confirmPin = confirmPinInput.value.trim();
+
+  // Use persisted accounts for validation and adding
+  const allAccounts = getAllAccounts();
+
+  // Basic validation
+  if (!firstName || !lastName || !email || !pin || !confirmPin) {
+    errorDiv.textContent = 'Please fill in all fields.';
+    return;
+  }
+  if (pin !== confirmPin) {
+    errorDiv.textContent = 'PINs do not match!';
+    return;
+  }
+  if (allAccounts.some(acc => acc.email === email)) {
+    errorDiv.textContent = 'An account with this email already exists!';
+    return;
+  }
+
+  // Generate a unique account number
+  let accountNumber;
+  do {
+    accountNumber = Math.floor(100000 + Math.random() * 900000);
+  } while (allAccounts.some(acc => acc.account === accountNumber));
+
+  // Create new account object
+  const newAccount = {
+    owner: `${firstName} ${lastName}`,
+    email,
+    movements: [0],
+    interestRate: 1.0,
+    pin: Number(pin),
+    account: accountNumber,
+    movementsDate: [new Date().toISOString()],
+    currency: 'ETB',
+  };
+
+  allAccounts.push(newAccount);
+  saveAllAccounts(allAccounts);
+  localStorage.setItem('currentAccount', JSON.stringify(newAccount));
+  localStorage.setItem('isNewUser', 'true');
+
+  errorDiv.textContent = '';
+  closeSignupModal();
+  window.location.href = 'home.html';
+});
+
+// Clear error message when opening the signup modal
+btnsOpenSignupModal.forEach(btn => btn.addEventListener('click', function() {
+  const form = modalSignup.querySelector('form');
+  const errorDiv = form.querySelector('.signup-error-message');
+  if (errorDiv) errorDiv.textContent = '';
+}));

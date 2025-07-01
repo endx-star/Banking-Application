@@ -4,6 +4,7 @@ const account1 = {
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
   interestRate: 1.2, // %
   pin: 1111,
+  account: 545454,
   movementsDate: [
     '2019-11-20T23:50:18.467Z',
     '2020-10-27T16:49:22.245Z',
@@ -22,6 +23,7 @@ const account2 = {
   email: 'haymi333@gmail.com',
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
+  account: 191919,
   pin: 2222,
   movementsDate: [
     '2019-11-11T22:31:16.178Z',
@@ -42,6 +44,7 @@ const account3 = {
   email: 'steven444@gmail.com',
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
+  account: 171717,
   pin: 3333,
   movementsDate: [
     '2019-12-29T27:58:18.467Z',
@@ -62,6 +65,7 @@ const account4 = {
   movements: [430, 1000, 700, 50, 90, -400, 300, -980],
   interestRate: 1,
   pin: 4444,
+  account: 121212,
   movementsDate: [
     '2019-12-29T27:58:18.467Z',
     '2020-10-27T16:49:22.245Z',
@@ -80,6 +84,7 @@ const account5 = {
   email: 'gashaw@gmail.com',
   movements: [1000, -100, 500, 900, -3000, 4000, -650],
   interestRate: 0.8,
+  account: 212121,
   pin: 5555,
   movementsDate: [
     '2019-12-29T27:58:18.467Z',

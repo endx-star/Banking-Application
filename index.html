@@ -33,12 +33,12 @@
             <a class="nav__link" href="#section--3">Testimonials</a>
           </li>
           <li class="nav__item"></li>
-            <a class="nav__link nav__link--btn btn--show-modal-login nav__link--btn_login" href="#"
+            <a class="nav__link nav__link--btn btn--show-modal-login nav__link--btn_login" href="home.html"
               >Login</a
             >
           </li>
           <li class="nav__item">
-            <a class="nav__link nav__link--btn btn--show-modal nav__link--btn_signup" href="#"
+            <a class="nav__link nav__link--btn btn--show-modal-signup nav__link--btn_signup" href="home.html"
               >Open account</a
             >
           </li>
@@ -223,8 +223,8 @@
             </blockquote>
             <address class="testimonial__author">
               <img src="img/user-1.jpg" alt="" class="testimonial__photo" />
-              <h6 class="testimonial__name">Aarav Lynn</h6>
-              <p class="testimonial__location">San Francisco, USA</p>
+              <h6 class="testimonial__name">Jonny Ermias</h6>
+              <p class="testimonial__location">Addis Ababa, Ethiopia</p>
             </address>
           </div>
         </div>
@@ -244,11 +244,10 @@
             <address class="testimonial__author">
               <img src="img/user-2.jpg" alt="" class="testimonial__photo" />
               <h6 class="testimonial__name">Miyah Miles</h6>
-              <p class="testimonial__location">London, UK</p>
+              <p class="testimonial__location">Nairobi, Kenya</p>
             </address>
           </div>
         </div>
-
         <div class="slide slide--3">
           <div class="testimonial">
             <h5 class="testimonial__header">
@@ -265,7 +264,7 @@
             <address class="testimonial__author">
               <img src="img/user-3.jpg" alt="" class="testimonial__photo" />
               <h6 class="testimonial__name">Francisco Gomes</h6>
-              <p class="testimonial__location">Lisbon, Portugal</p>
+              <p class="testimonial__location">Washington DC, USA</p>
             </address>
           </div>
         </div>
@@ -286,7 +285,7 @@
           today!
         </h3>
       </div>
-      <button class="btn btn--show-modal">Open your free account today!</button>
+      <button class="btn btn--show-modal-signup">Open your free account today!</button>
     </section>
 
     <footer class="footer">
@@ -319,40 +318,50 @@
         <a
           class="footer__link twitter-link"
           target="_blank"
-          href="https://twitter.com/jonasschmedtman"
+          href="#"
           >Endale Tegegnework</a
         >.All rights reserved.
       </p>
     </footer>
-    <div class="modal hidden">
+    <div class="modal modal--login hidden">
       <button class="btn--close-modal">&times;</button>
       <h2 class="modal__header">
-        Open your bank account <br/>
+        Log into your account
+      </h2>
+      <form class="modal__form">
+        <label>Email</label>
+        <input type="text" class="modal__form--email" />
+        <label>PIN</label>
+        <input type="password" class="modal__form--pin" maxlength="4" />
+        <div class="login-error-message"></div>
+        <button class="btn modal__form--login">Login</button>
+      </form>
+    </div>
+    <div class="overlay overlay--login hidden"></div>
+
+    <div class="modal modal--signup hidden">
+      <button class="btn--close-modal">&times;</button>
+      <h2 class="modal__header">
+        Open your bank account <br />
         in just <span class="highlight">5 minutes</span>
       </h2>
       <form class="modal__form">
         <label>First Name</label>
-        <input type="text" />
+        <input type="text"  class="modal__form--email"/>
         <label>Last Name</label>
-        <input type="text" />
+        <input type="text" class="modal__form--email" />
         <label>Email Address</label>
-        <input type="email" />
-        <button class="btn">Next step &rarr;</button>
-      </form>
-    <div class="overlay hidden"></div>
-    <div class="modal--login hidden">
-      <button class="btn--close-modal">&times;</button>
-      <h2 class="modal__header">
-        Login to your account
-      </h2>
-      <form class="modal__form">
-        <label>Email</label>
-        <input type="email" />
+        <input type="email" class="modal__form--email" />
         <label>PIN</label>
-        <input type="password" />
-        <button class="btn">Login</button>
+        <input type="password" class="modal__form--pin" />
+        <label>Confirm PIN</label>
+        <input type="password" class="modal__form--pin" />
+        <div class="signup-error-message"></div>
+        <button class="btn modal__form--signup">Create Account</button>
       </form>
-    <div class="overlay--login hidden"></div>
+    </div>
+    <div class="overlay overlay--signup hidden"></div>
+
     <script type="module" src="src/scripts/index.js"></script>
   </body>
 </html>
