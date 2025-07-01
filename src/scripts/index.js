@@ -103,9 +103,9 @@ loginForm.querySelector('.modal__form--login').addEventListener('click', functio
 
   // Use getAllAccounts to include new signups if persisted
   const allAccounts = getAllAccounts();
-  const account = allAccounts.find(acc => acc.email === email);
+  const account = allAccounts.find(acc => acc.email === email && acc.pin === pin);
 
-  if (account?.pin === pin) {
+  if (account) {
     localStorage.setItem('currentAccount', JSON.stringify(account));
     localStorage.setItem('isNewUser', 'false');
     loginErrorDiv.textContent = '';
@@ -404,11 +404,11 @@ modalSignup.querySelector('.modal__form--signup').addEventListener('click', func
   const newAccount = {
     owner: `${firstName} ${lastName}`,
     email,
-    movements: [0],
+    movements: [],
     interestRate: 1.0,
     pin: Number(pin),
     account: accountNumber,
-    movementsDate: [new Date().toISOString()],
+    movementsDate: [],
     currency: 'ETB',
   };
 
@@ -428,3 +428,33 @@ btnsOpenSignupModal.forEach(btn => btn.addEventListener('click', function() {
   const errorDiv = form.querySelector('.signup-error-message');
   if (errorDiv) errorDiv.textContent = '';
 }));
+
+closeBtn.addEventListener('click', function (e) {
+  e.preventDefault();
+  const user = document.querySelector('.form_input--user').value;
+  const pin = Number(document.querySelector('.form_input--pin').value);
+
+  if (user === currentAccount.email && pin === currentAccount.pin) {
+    // Remove from localStorage accounts
+    const allAccounts = getAllAccounts();
+    const index = allAccounts.findIndex(acc => acc.email === currentAccount.email);
+    if (index !== -1) {
+      allAccounts.splice(index, 1);
+      saveAllAccounts(allAccounts);
+    }
+
+    // Clear localStorage
+    localStorage.removeItem('currentAccount');
+
+    // Hide UI
+    document.querySelector('.app').style.opacity = 0;
+    
+    // Redirect to login page after 2 seconds
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 2000);
+  }
+
+  document.querySelector('.form_input--user').value = '';
+  document.querySelector('.form_input--pin').value = '';
+});

@@ -31,7 +31,7 @@ labelWelcome.textContent = isNewUser
 localStorage.setItem('isNewUser', 'false');
 
 const displayMovements = function (accs) {
-  containerMovements.innerHTML = '';
+  containerMovements.innerHTML = '<h3 class="movements_heading">Transaction history</h3>';
   accs.movements.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const date = new Date(accs.movementsDate[i]);
@@ -47,7 +47,7 @@ const displayMovements = function (accs) {
       <div class="movements_value">${mov.toFixed(2)} ${accs.currency}</div>
     </div>
     `;
-    containerMovements.insertAdjacentHTML('afterbegin', html);
+    containerMovements.insertAdjacentHTML('beforeend', html);
   });
 };
 
@@ -111,34 +111,45 @@ sortBtn.addEventListener('click', function (e) {
   displayMovements(sortedAccount);
 });
 
+// Add helper functions at the top if not imported
+function getAllAccounts() {
+  const stored = localStorage.getItem('accounts');
+  if (stored) return JSON.parse(stored);
+  return accounts;
+}
+function saveAllAccounts(accs) {
+  localStorage.setItem('accounts', JSON.stringify(accs));
+}
+
 //2. TRANSFER MONEY
 transferBtn.addEventListener('click', function (e) {
   e.preventDefault();
   const amount = Number(document.querySelector('.form_input--amount').value);
   const receiverAcc = document.querySelector('.form_input--to').value;
-  const receiver = accounts.find(acc => acc.account === receiverAcc);
+  const allAccounts = getAllAccounts();
+  const senderIndex = allAccounts.findIndex(acc => acc.email === currentAccount.email);
+  const receiver = allAccounts.find(acc => String(acc.account) === String(receiverAcc));
 
   if (
     amount > 0 &&
     receiver &&
     amount <= currentAccount.movements.reduce((acc, mov) => acc + mov, 0) &&
-    receiver?.account !== currentAccount.account
+    receiver.account !== currentAccount.account
   ) {
     // Doing the transfer
-    currentAccount.movements.push(-amount);
+    allAccounts[senderIndex].movements.push(-amount);
+    allAccounts[senderIndex].movementsDate.push(new Date().toISOString());
     receiver.movements.push(amount);
-    
-    // Add transfer date
-    currentAccount.movementsDate.push(new Date().toISOString());
     receiver.movementsDate.push(new Date().toISOString());
 
-    // Update UI
-    displayMovements(currentAccount);
-    calcDisplayBalance(currentAccount);
-    calcDisplaySummary(currentAccount);
+    // Update UI for sender
+    displayMovements(allAccounts[senderIndex]);
+    calcDisplayBalance(allAccounts[senderIndex]);
+    calcDisplaySummary(allAccounts[senderIndex]);
 
-    // Update localStorage
-    localStorage.setItem('currentAccount', JSON.stringify(currentAccount));
+    // Save all accounts and update currentAccount in localStorage
+    saveAllAccounts(allAccounts);
+    localStorage.setItem('currentAccount', JSON.stringify(allAccounts[senderIndex]));
 
     // Clear input fields
     document.querySelector('.form_input--amount').value = '';
@@ -151,18 +162,31 @@ loanBtn.addEventListener('click', function (e) {
   e.preventDefault();
   const amount = Number(document.querySelector('.form_input--loan-amount').value);
 
-  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
-    // Add movement
-    currentAccount.movements.push(amount);
-    currentAccount.movementsDate.push(new Date().toISOString());
+  if (
+    amount > 0 &&
+    (
+      currentAccount.movements.length === 0 ||
+      currentAccount.movements.some(mov => mov >= amount * 0.1)
+    )
+  ) {
+    const allAccounts = getAllAccounts();
+    const accIndex = allAccounts.findIndex(acc => acc.email === currentAccount.email);
+
+    // Add movement to the correct account in the accounts array
+    allAccounts[accIndex].movements.push(amount);
+    allAccounts[accIndex].movementsDate.push(new Date().toISOString());
+
+    // Save all accounts and update currentAccount in localStorage
+    saveAllAccounts(allAccounts);
+    localStorage.setItem('currentAccount', JSON.stringify(allAccounts[accIndex]));
+
+    // Update the in-memory currentAccount variable
+    Object.assign(currentAccount, allAccounts[accIndex]);
 
     // Update UI
     displayMovements(currentAccount);
     calcDisplayBalance(currentAccount);
     calcDisplaySummary(currentAccount);
-
-    // Update localStorage
-    localStorage.setItem('currentAccount', JSON.stringify(currentAccount));
   }
   document.querySelector('.form_input--loan-amount').value = '';
 });
@@ -174,12 +198,13 @@ closeBtn.addEventListener('click', function (e) {
   const pin = Number(document.querySelector('.form_input--pin').value);
 
   if (user === currentAccount.email && pin === currentAccount.pin) {
-    const index = accounts.findIndex(
-      acc => acc.email === currentAccount.email
-    );
-    
-    // Delete account
-    accounts.splice(index, 1);
+    // Remove from localStorage accounts
+    const allAccounts = getAllAccounts();
+    const index = allAccounts.findIndex(acc => acc.email === currentAccount.email);
+    if (index !== -1) {
+      allAccounts.splice(index, 1);
+      saveAllAccounts(allAccounts);
+    }
 
     // Clear localStorage
     localStorage.removeItem('currentAccount');
@@ -206,4 +231,4 @@ if (logoutBtn) {
   });
 }
 
-console.log(accounts);
+

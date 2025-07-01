@@ -123,10 +123,11 @@ body {
 /* MOVEMENTS */
 .movements {
   grid-row: 2 / span 3;
-  /* height: 75%; */
   background-color: #fff;
   border-radius: 1rem;
-  overflow: scroll;
+  overflow-y: auto;
+  height: 50rem;
+  padding: 0 0 0 0;
 }
 .movements_row {
   padding: 2.25rem 4rem;
@@ -163,6 +164,20 @@ body {
 .movements_value {
   font-size: 1.7rem;
   margin-left: auto;
+}
+
+.movements_heading {
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #333;
+  background: #fff;
+  padding: 0.5rem 0 0.5rem 2rem;
+  margin-bottom: 0;
+  margin-top: 0;
+  border-radius: 0.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 /* SUMMARY */
@@ -209,7 +224,6 @@ body {
 /* OPERATIONS */
 .operation {
   grid-column: 2;
-  grid-row: 2;
   border-radius: 1rem;
   padding: 3rem 4rem;
   color: #333;
@@ -217,14 +231,17 @@ body {
 
 .operation--transfer {
   background-image: linear-gradient(to top left, #ffb003, #ffcb03);
+  grid-row: 2;
 }
 
 .operation--loan {
   background-image: linear-gradient(to top left, #39b385, #9be15d);
+  grid-row: 3;
 }
 
 .operation--close {
   background-image: linear-gradient(to top left, #e52a5a, #ff585f);
+  grid-row: 4;
 }
 
 h2 {
